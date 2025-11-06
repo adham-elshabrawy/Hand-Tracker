@@ -164,6 +164,12 @@ def main():
     reference_hand_size = (open_hand_size + closed_hand_size) / 2
     tolerance = reference_hand_size * 0.15
     
+    # Calibrate closed hand
+    closed_calibration = calibrate(cap, hands, "Show CLOSED hand (make a fist)")
+    if closed_calibration is None:
+        cap.release()
+        cv2.destroyAllWindows()
+        return
     
     print("\n" + "="*50)
     print("Calibration complete! Starting tracking...")
@@ -200,7 +206,7 @@ def main():
                 status_text = "Good position" if in_zone else "Adjust distance"
 
                 #Draw bounding box
-                cv2.rectangle(frame, (bbox[0], bbox[1]), (bbox[2], bbox[3]), box_colour, 2)
+                cv2.rectangle(frame, status_text, (bbox[0], bbox[1]-10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, box_colour, 2)
 
                 #Display status
                 cv2.putText(frame, status_text, (bbox[0], bbox[1]-10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, box_colour, 2)
